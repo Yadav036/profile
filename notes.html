@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Notes</title>
+    <style>
+        body {
+            background-color: #111;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .notes-section {
+            /* increased top padding to account for fixed navigation height */
+            padding: 120px 20px 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .note-card {
+            background: linear-gradient(145deg, rgba(30, 30, 30, 0.8), rgba(15, 15, 15, 0.9));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(80, 80, 80, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .note-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(120, 120, 120, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .note-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        .note-card small {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+
+        /* Enhanced Navigation with animated borders */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 18px 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 56px;
+        }
+
+        /* Simplified logo with cleaner animations and better proportions */
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            position: relative;
+            padding: 10px 18px;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Simplified and slowed down border animations for better pacing */
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+            background-size: 200% 100%;
+            animation: move-line-horizontal 6s ease-in-out infinite;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+            background-size: 200% 100%;
+            animation: move-line-horizontal 6s ease-in-out infinite;
+            animation-delay: 3s;
+        }
+
+        .logo .left-border {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 1px;
+            background: linear-gradient(180deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+            background-size: 100% 200%;
+            animation: move-line-vertical 6s ease-in-out infinite;
+            animation-delay: 4.5s;
+        }
+
+        .logo .right-border {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+            background: linear-gradient(180deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+            background-size: 100% 200%;
+            animation: move-line-vertical 6s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+
+        /* Improved nav links spacing and hover effects for better pacing */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            padding: 14px 12px;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #94a3b8, #e2e8f0);
+            border-radius: 2px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-links a:hover::after {
+            width: 75%;
+        }
+
+        /* Refined contact icons spacing and smoother hover effects */
+        .contact-icons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .contact-icon {
+            width: 22px;
+            height: 22px;
+            color: #cbd5e1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            margin: -10px;
+        }
+
+        .contact-icon:hover {
+            color: #ffffff;
+            transform: translateY(-2px) scale(1.05);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Main content */
+        main {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Smoother keyframe animations with easing */
+        @keyframes move-line-horizontal {
+            0%, 100% { background-position: -200% 0; }
+            50% { background-position: 200% 0; }
+        }
+
+        @keyframes move-line-vertical {
+            0%, 100% { background-position: 0 -200%; }
+            50% { background-position: 0 200%; }
+        }
+
+        /* Updated responsive design with better proportions */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 0;
+            }
+            
+            .nav-container {
+                padding: 0 15px;
+                min-height: 50px;
+            }
+            
+            .nav-links {
+                gap: 24px;
+            }
+            
+            .nav-links a {
+                font-size: 14px;
+                padding: 12px 8px;
+            }
+            
+            .contact-icons {
+                gap: 16px;
+            }
+            
+            .logo {
+                font-size: 20px;
+                padding: 8px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+    <nav>
+        <div class="nav-container">
+            <a href="GokulYadav.html" class="logo">
+                <div class="left-border"></div>
+                <div class="right-border"></div>
+                Gokul Yadav
+            </a>
+            <ul class="nav-links">
+               <li><a href="#projects">Projects</a></li>
+<li><a href="#skills">Skills</a></li>
+<li><a href="notes.html">Notes</a></li>
+<li><a href="Gokul_Yadav_Resume_Updated.pdf" target="_blank">Resume</a></li>
+
+            </ul>
+            <div class="contact-icons">
+                <svg class="contact-icon" onclick="window.location.href='tel:+919740117597'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <svg class="contact-icon" onclick="window.location.href='mailto:gokulyadhavag@gmail.com'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <svg class="contact-icon" onclick="window.open('https://linkedin.com/in/gokul-yadav-g', '_blank')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+
+    <section class="notes-section">
+        <div class="section-title"></div>
+        <div class="notes-grid">
+            <a href="https://drive.google.com/your-link-OS" class="note-card" target="_blank">
+                <div class="note-title">Operating System</div>
+                <small>Semester 3</small>
+            </a>
+            <a href="https://drive.google.com/your-link-AI" class="note-card" target="_blank">
+                <div class="note-title">Artificial Intelligence</div>
+                <small>Semester 5</small>
+            </a>
+            <a href="https://drive.google.com/your-link-ML" class="note-card" target="_blank">
+                <div class="note-title">Machine Learning</div>
+                <small>Semester 6</small>
+            </a>
+            <a href="https://drive.google.com/your-link-CN" class="note-card" target="_blank">
+                <div class="note-title">Computer Networks</div>
+                <small>Semester 4</small>
+            </a>
+            <a href="https://drive.google.com/your-link-Electronics" class="note-card" target="_blank">
+                <div class="note-title">Electronics</div>
+                <small>Semester 2</small>
+            </a>
+            <a href="https://drive.google.com/your-link-SEPM" class="note-card" target="_blank">
+                <div class="note-title">Software Engineering & Project Management</div>
+                <small>Semester 4</small>
+            </a>
+            <a href="https://drive.google.com/your-link-Physics" class="note-card" target="_blank">
+                <div class="note-title">Physics</div>
+                <small>Semester 1</small>
+            </a>
+            <a href="https://drive.google.com/your-link-WasteManagement" class="note-card" target="_blank">
+                <div class="note-title">Waste Management</div>
+                <small>Semester 6</small>
+            </a>
+            <a href="https://drive.google.com/your-link-RMIPR" class="note-card" target="_blank">
+                <div class="note-title">Research Methodology IPR</div>
+                <small>Semester 5</small>
+            </a>
+        </div>
+    </section>
+</body>
+</html>
